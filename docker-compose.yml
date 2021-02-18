@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  producer:
+    build:
+      context: ./producer
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - kafka
+  consumer:
+    build:
+      context: ./consumer
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - kafka
+  db:
+    image: postgres
+    env_file:
+      - .env
+    ports:
+      - '5432:5432'
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+  zookeeper:
+    image: 'docker.io/bitnami/zookeeper:3-debian-10'
+    ports:
+      - '2181:2181'
+    volumes:
+      - 'zookeeper_data:/bitnami'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: 'docker.io/bitnami/kafka:2-debian-10'
+    logging:
+        driver: none
+    ports:
+      - '9092:9092'
+    volumes:
+      - 'kafka_data:/bitnami'
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+  database-data:
+    driver: local
