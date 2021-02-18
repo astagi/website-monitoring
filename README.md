@@ -1,6 +1,8 @@
 # Website monitoring
 
-## Setup .env file
+## Run application
+
+### Setup .env file
 
 This file contains the environment variables
 
@@ -8,7 +10,7 @@ This file contains the environment variables
 cp example.env .env
 ```
 
-## Setup config.json file
+### Setup config.json file
 
 This file contains rules for monitoring websites
 
@@ -16,13 +18,21 @@ This file contains rules for monitoring websites
 cp example.config.json producer/config.json
 ```
 
-## Start local docker
+### Start local docker
 
 ```bash
 docker-compose up
 ```
 
-## Clean Kafka topics
+## Development
+
+### Install dev requirements
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+### Clean Kafka topics
 
 If you need you can clean Kafka topics inside the container running during development
 
