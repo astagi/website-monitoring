@@ -16,7 +16,7 @@ while not db:
         )
         db_cur = db.cursor()
     except Exception as ex:
-        print (ex)
+        pass
 
 while True:
     try:
@@ -27,7 +27,7 @@ while True:
         pass
 
 # Check databases for Oruga, Buefy and Developers Italia statuses
-print ("Checking websites metrics are stored..")
+print("Checking that websites metrics are stored..", end="", flush=True)
 first_records = []
 while not len(first_records) == 3:
     db_cur.execute("SELECT * from website_status;")
@@ -40,8 +40,10 @@ while not len(first_records) == 3:
         assert row[4] > 0
         assert row[5] < datetime.datetime.now()
 
+print("✅")
+
 # Check that data changes
-print ("Checking websites metrics are changed..")
+print("Checking that websites metrics are changed..", end="", flush=True)
 changed = False
 
 while not changed:
@@ -51,6 +53,7 @@ while not changed:
         changed |= row[4] != first_records[i][4]
         changed |= row[5] < first_records[i][5]
 
+print("✅")
 # Close after some time
 db_cur.close()
 db.close()
