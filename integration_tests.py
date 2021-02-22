@@ -18,21 +18,21 @@ while not db:
     except Exception as ex:
         print (ex)
 
-db_cur.execute(
-    """
-CREATE TABLE IF NOT EXISTS  website_status (id serial PRIMARY KEY, url varchar unique, status_code integer, content_check boolean, time decimal, report_time timestamp);
-"""
-)
-db.commit()
-db_cur.execute("DELETE FROM website_status;")
-db.commit()
+while True:
+    try:
+        db_cur.execute("DELETE FROM website_status;")
+        db.commit()
+        break
+    except psycopg2.errors.UndefinedTable:
+        pass
 
 # Check databases for Oruga, Buefy and Developers Italia statuses
-
+print ("Checking websites metrics are stored..")
 first_records = []
 while not len(first_records) == 3:
     db_cur.execute("SELECT * from website_status;")
     records = db_cur.fetchall()
+    first_records = []
     for row in records:
         first_records.append(row)
         assert row[2] >= 200
@@ -41,7 +41,7 @@ while not len(first_records) == 3:
         assert row[5] < datetime.datetime.now()
 
 # Check that data changes
-
+print ("Checking websites metrics are changed..")
 changed = False
 
 while not changed:

@@ -16,8 +16,6 @@ class Consumer:
             password=os.getenv("POSTGRES_PASSWORD", "postgres"),
         )
         self._db_cur = self._db.cursor()
-        self._db_cur.execute("DROP TABLE IF EXISTS website_status;")
-        self._db.commit()
         self._db_cur.execute(
             """
         CREATE TABLE IF NOT EXISTS website_status (id serial PRIMARY KEY, url varchar unique, status_code integer, content_check boolean, time decimal, report_time timestamp);

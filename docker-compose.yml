@@ -24,7 +24,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - database-data-2:/var/lib/postgresql/data/
+      - database-data-3:/var/lib/postgresql/data/
   zookeeper:
     image: 'docker.io/bitnami/zookeeper:3-debian-10'
     ports:
@@ -56,5 +56,5 @@ volumes:
     driver: local
   kafka_data-2:
     driver: local
-  database-data-2:
+  database-data-3:
     driver: local

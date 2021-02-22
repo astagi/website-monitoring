@@ -49,7 +49,7 @@ def test_consumer_receives_objects(kafka_admin_client, postgres_client):
     producer.flush()
     time.sleep(5)
     consumer.stop()
-
+    time.sleep(5)
     db_cur.execute("SELECT * from website_status;")
     records = db_cur.fetchall()
 
