@@ -4,7 +4,10 @@ clean:
 	@find . -name "__pycache__" -type d | xargs rm -rf
 
 integration-test: clean
+	@mv producer/config.json producer/back_config.json || true
+	@cp example.config.json producer/config.json
 	@docker-compose up -d --build
+	@mv producer/back_config.json producer/config.json || true
 	@python integration_tests.py
 	@docker-compose down
 
