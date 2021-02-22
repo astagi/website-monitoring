@@ -9,7 +9,17 @@ from kafka import KafkaConsumer
 
 
 default_config = [
-    {"url": "https://developers.italia.it", "regexp": "data"},
+    {
+        "url": "https://developers.italia.it",
+        "regexp": "data"
+    },
+    {
+        "url": "https://oruga.io"
+    },
+    {
+        "url": "https://buefy.org",
+        "regexp": "Vue"
+    }
 ]
 
 
@@ -32,12 +42,14 @@ def test_producer_creates_objects(create_json_config, kafka_admin_client):
         producer.connect()
         with requests_mock.Mocker() as m:
             m.get('https://developers.italia.it', text='data')
+            m.get('https://oruga.io', text='data')
+            m.get('https://buefy.org', text='data')
             producer.start()
 
     launcher = threading.Thread(target=launch_producer)
     launcher.start()
 
-    time.sleep(5)
+    time.sleep(10)
     consumer = KafkaConsumer(
         "reports",
         bootstrap_servers=[f"{os.getenv('KAFKA_HOST', 'localhost:29092')}"],
@@ -49,7 +61,12 @@ def test_producer_creates_objects(create_json_config, kafka_admin_client):
     producer.stop()
     for msg in consumer:
         site_stat = json.loads(msg.value)
-        assert msg.key.decode("utf-8") == "https://developers.italia.it"
+        key = msg.key.decode("utf-8")
+        if key == "https://developers.italia.it":
+            assert site_stat["content_check"] is True
+        if key == "https://oruga.io":
+            assert site_stat["content_check"] is True
+        if key == "https://buefy.org":
+            assert site_stat["content_check"] is False
         assert site_stat["status_code"] == 200
-        assert site_stat["content_check"] is True
         assert site_stat["time"] > 0
