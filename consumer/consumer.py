@@ -20,7 +20,7 @@ class Consumer:
         self._db.commit()
         self._db_cur.execute(
             """
-        CREATE TABLE website_status (id serial PRIMARY KEY, url varchar unique, status_code integer, content_check boolean, time decimal, report_time timestamp);
+        CREATE TABLE IF NOT EXISTS website_status (id serial PRIMARY KEY, url varchar unique, status_code integer, content_check boolean, time decimal, report_time timestamp);
         """
         )
         self._db.commit()

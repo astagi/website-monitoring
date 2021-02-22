@@ -9,17 +9,9 @@ from kafka import KafkaConsumer
 
 
 default_config = [
-    {
-        "url": "https://developers.italia.it",
-        "regexp": "data"
-    },
-    {
-        "url": "https://oruga.io"
-    },
-    {
-        "url": "https://buefy.org",
-        "regexp": "Vue"
-    }
+    {"url": "https://developers.italia.it", "regexp": "data"},
+    {"url": "https://oruga.io"},
+    {"url": "https://buefy.org", "regexp": "Vue"},
 ]
 
 
@@ -41,9 +33,9 @@ def test_producer_creates_objects(create_json_config, kafka_admin_client):
     def launch_producer():
         producer.connect()
         with requests_mock.Mocker() as m:
-            m.get('https://developers.italia.it', text='data')
-            m.get('https://oruga.io', text='data')
-            m.get('https://buefy.org', text='data')
+            m.get("https://developers.italia.it", text="data")
+            m.get("https://oruga.io", text="data")
+            m.get("https://buefy.org", text="data")
             producer.start()
 
     launcher = threading.Thread(target=launch_producer)

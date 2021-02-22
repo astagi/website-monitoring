@@ -1,22 +1,22 @@
 version: '3'
 
 services:
-  # producer:
-  #   build:
-  #     context: ./producer
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
-  #     - kafka
-  # consumer:
-  #   build:
-  #     context: ./consumer
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
-  #     - kafka
+  producer:
+    build:
+      context: ./producer
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - kafka
+  consumer:
+    build:
+      context: ./consumer
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - kafka
   db:
     image: postgres
     env_file:
