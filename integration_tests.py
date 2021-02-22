@@ -36,7 +36,6 @@ while not len(first_records) == 3:
     for row in records:
         first_records.append(row)
         assert row[2] >= 200
-        assert row[3] is True
         assert row[4] > 0
         assert row[5] < datetime.datetime.now()
 

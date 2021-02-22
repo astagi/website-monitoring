@@ -11,7 +11,7 @@ from kafka import KafkaProducer
 def test_consumer_receives_objects(kafka_admin_client, postgres_client):
 
     (db, db_cur) = postgres_client
-    db_cur.execute("DROP TABLE IF EXISTS website_status;")
+    db_cur.execute("DELETE FROM website_status;")
     db.commit()
 
     kafka_admin_client.delete_topics(["reports"])
@@ -46,16 +46,18 @@ def test_consumer_receives_objects(kafka_admin_client, postgres_client):
         encoding="utf-8",
     )
     producer.send("reports", key=bytes(url, encoding="utf-8"), value=body_bytes)
-    producer.flush()
-    time.sleep(5)
-    consumer.stop()
-    time.sleep(5)
-    db_cur.execute("SELECT * from website_status;")
-    records = db_cur.fetchall()
 
+    records = []
+    while not len(records):
+        db_cur.execute("SELECT * from website_status;")
+        records = db_cur.fetchall()
+
+    consumer.stop()
     assert len(records) == 1
 
     for row in records:
         assert row[1] == "https://www.qwe.com"
         assert row[2] == 200
         assert row[3] > 0
+
+    time.sleep(5)
