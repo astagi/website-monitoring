@@ -1,22 +1,22 @@
 version: '3'
 
 services:
-  producer:
-    build:
-      context: ./producer
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - kafka
-  consumer:
-    build:
-      context: ./consumer
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - kafka
+  # producer:
+  #   build:
+  #     context: ./producer
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #     - kafka
+  # consumer:
+  #   build:
+  #     context: ./consumer
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #     - kafka
   db:
     image: postgres
     env_file:
@@ -24,13 +24,13 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - database-data:/var/lib/postgresql/data/
+      - database-data-2:/var/lib/postgresql/data/
   zookeeper:
     image: 'docker.io/bitnami/zookeeper:3-debian-10'
     ports:
       - '2181:2181'
     volumes:
-      - 'zookeeper_data:/bitnami'
+      - 'zookeeper_data-2:/bitnami'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
@@ -39,18 +39,22 @@ services:
         driver: none
     ports:
       - '9092:9092'
+      - '29092:29092'
     volumes:
-      - 'kafka_data:/bitnami'
+      - 'kafka_data-2:/bitnami'
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
     depends_on:
       - zookeeper
 
 volumes:
-  zookeeper_data:
+  zookeeper_data-2:
     driver: local
-  kafka_data:
+  kafka_data-2:
     driver: local
-  database-data:
+  database-data-2:
     driver: local

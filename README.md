@@ -39,3 +39,11 @@ If you need you can clean Kafka topics inside the container running during devel
 ```bash
 kafka-topics.sh --zookeeper zookeeper:2181 --alter --topic report --config retention.ms=1000
 ```
+
+### Run tests
+
+Activate your virtual environment, then run
+
+```bash
+make test
+```

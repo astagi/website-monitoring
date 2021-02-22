@@ -1,0 +1,13 @@
+[run]
+branch = True
+source =
+    consumer
+    producer
+omit =
+    */**/__init__.py
+    */test_*.py
+    consumer/main.py
+    producer/main.py
+[report]
+show_missing = True
+
